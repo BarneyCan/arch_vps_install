@@ -1,5 +1,0 @@
-#!/bin/bash
-parted /dev/vda mklabel msdos mkpart primary ext4 1MiB 100%
-mkfs.ext4 /dev/vda1
-mount /dev/vda1 /mnt
-pacstrap /mnt base base-devel
