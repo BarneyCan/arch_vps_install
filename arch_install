@@ -1,0 +1,28 @@
+#!/bin/bash
+locale_conf () {
+	echo "LANG=en_US.UTF-8"
+}
+parted /dev/vda mklabel msdos mkpart primary ext4 1MiB 100%
+mkfs.ext4 /dev/vda1
+mount /dev/vda1 /mnt
+pacstrap /mnt base base-devel
+genfstab -U /mnt >> /mnt/etc/fstab
+
+# Commands executed on new system
+arch-chroot /mnt ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
+arch-chroot /mnt sed -i -e 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
+arch-chroot /mnt locale-gen
+arch-chroot /mnt locale.conf > /etc/locale.conf
+arch-chroot /mnt pacman -S grub intel-ucode openssh
+arch-chroot /mnt grub-install --target=i386-pc /dev/vda
+arch-chroot /mnt grub-mkconfig -o /boot/grub/grub.cfg
+arch-chroot /mnt sed -i -e 's/timeout=5/timeout=0/g' /boot/grub/grub.cfg
+arch-chroot /mnt systemctl enable sshd dhcpcd
+echo -n "Please input the user name you wanna create: "
+read MYUSER
+arch-chroot /mnt useradd -m -G wheel -s /bin/bash $MYUSER
+arch-chroot /mnt passwd
+arch-chroot /mnt passwd $MYUSER
+umount /mnt
+reboot
+
