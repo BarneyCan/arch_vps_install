@@ -46,5 +46,5 @@ user_input
 printf "\n"
 echo -n "Please enter user name of this service: "
 read USER
-shadowconf > $USER.service
+shadowconf > /usr/lib/systemd/system/$USER.service
 echo "shadowsocks server service: $USER.service generated succesfully"
