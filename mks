@@ -1,0 +1,50 @@
+#!/bin/bash
+server=`hostname --ip-address`
+
+shadowconf () {
+	echo "[Unit]"
+	echo "Description=Shadowsocks-Libev Server Service"
+	echo "After=network-online.target"
+	echo "[Service]"
+	echo "Type=simple"
+	echo "User=nobody"
+	echo "CapabilityBoundingSet=CAP_NET_BIND_SERVICE"
+	echo "ExecStart=/usr/bin/ss-server -s $server -u -p $s_port -l 1080 -k $keyword -m $encryption"
+	echo -e "\n"
+	echo "[Install]"
+	echo "WantedBy=multi-user.target"
+}
+
+user_input () {
+	echo -n "Please enter the remote port for this account: "
+	read s_port
+	echo -n "Please enter the keyword(password): "
+	read keyword
+	printf "Please select from the following encryption methods:\n\n"
+	echo "(1)aes-128-gcm, (2)aes-192-gcm, (3)aes-256-gcm,"
+        echo "(4)aes-128-cfb, (5)aes-192-cfb, (6)aes-256-cfb,"
+        echo "(7)aes-128-ctr, (8)aes-192-ctr, (9)aes-256-ctr,"
+        echo "(10)camellia-128-cfb, (11)camellia-192-cfb,"
+        echo "(12)camellia-256-cfb, (13)bf-cfb,"
+        echo "(14)chacha20-ietf-poly1305,"
+        echo "(15)xchacha20-ietf-poly1305,"
+        echo "(16)salsa20, (17)chacha20, (18)chacha20-ietf."
+	printf "\n"
+	em=(aes-128-gcm aes-192-gcm aes-256-gcm aes-128-cfb
+		aes-192-cfb aes-256-cfb aes-128-ctr aes-192-ctr 
+		aes-256-ctr camellia-128-cfb camellia-192-cfb camellia-256-cfb 
+		bf-cfb chacha20-ietf-poly1305 xchacha20-ietf-poly1305 
+		salsa20 chacha20 chacha20-ietf)
+	echo -n "Encryption method: "
+	read number
+	number_1=number-1
+	x=(\${em[$number_1]})
+	encryption=`eval echo ${x[@]}`
+}
+
+user_input
+printf "\n"
+echo -n "Please enter user name of this service: "
+read USER
+shadowconf > $USER.service
+echo "shadowsocks server service: $USER.service generated succesfully"
