@@ -1,5 +1,5 @@
 #!/bin/bash
-wget 'https://www.archlinux.org/mirrorlist/?country=CN&protocol=http&protocol=https&ip_version=4&use_mirror_status=on' -O /etc/pacman.d/mirrorlist
+wget 'https://www.archlinux.org/mirrorlist/?country=CN&protocol=http&protocol=https&ip_version=4' -O /etc/pacman.d/mirrorlist
 
 sed -i -e 's/#Server/Server/g' /etc/pacman.d/mirrorlist
 
