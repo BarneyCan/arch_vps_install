@@ -17,6 +17,7 @@ arch-chroot /mnt ln -sf /usr/share/zoneinfo/Asia/Shanghai /etc/localtime
 arch-chroot /mnt sed -i -e 's/#en_US.UTF-8/en_US.UTF-8/g' /etc/locale.gen
 arch-chroot /mnt locale-gen
 echo "LANG=en_US.UTF-8" > /mnt/etc/locale.conf
+arch-chroot /mnt pacman --noconfirm -S lvm2
 arch-chroot /mnt sed -i -e "s/block/block lvm2/g" /etc/mkinitcpio.conf
 arch-chroot /mnt mkinitcpio -p linux
 arch-chroot /mnt pacman --noconfirm -Syy
