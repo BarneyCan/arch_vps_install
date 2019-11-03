@@ -5,7 +5,7 @@ sed -i -e 's/#Server/Server/g' /etc/pacman.d/mirrorlist
 
 parted /dev/vda mklabel msdos mkpart primary ext4 1MiB 100%
 pvcreate /dev/vda1
-vgcreate arch dev/vda1
+vgcreate arch /dev/vda1
 lvcreate -l 100%FREE arch -n root
 mkfs.ext4 /dev/arch/root
 mount /dev/arch/root /mnt
