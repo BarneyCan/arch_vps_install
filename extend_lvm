@@ -1,0 +1,5 @@
+#!/bin/bash
+parted /dev/vda mklabel msdos mkpart primary ext4 1MiB 100%
+pvcreate /dev/vda2
+vgextend arch /dev/vda2
+lvresize -l +100%FREE --resizefs arch/root
